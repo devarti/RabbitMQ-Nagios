@@ -1,0 +1,60 @@
+#!/usr/bin/env perl
+
+#$Ida get_rabbitmq_state,v 1.0 2013/09/10 11:04:21 DPathak Exp DPathak $
+
+###  get_rabbitmq_state grab connections stats from RabbitMQ using command line...
+###  get_rabbitmq_stat file which will be run by hostmon.
+
+##########################
+
+use Data::Dumper;
+use Sys::Hostname;
+
+use vars qw($VERSION $PROGNAME  $verbose $timeout);
+use Tie::File;
+
+# get the base name of this script for use in the examples
+use File::Basename;
+$PROGNAME = basename($0);
+
+my $count = 0;
+
+my $source = "/var/tmp/capture_rabbit_state/rmq_state.txt";
+
+my $mq_ctrl_cmd = "/usr/sbin/rabbitmqctl";
+
+my $mq_list_cmd = "$mq_ctrl_cmd list_connections state";
+
+open my $fh, '>', "$source" or die $!;
+
+print $fh qx($mq_list_cmd > $source);
+
+my $string1 = "running";
+my $string2 = "blocking";
+my $string3 = "blocked";
+my $line = undef;
+
+open(FH1, $source);
+
+my @data = <FH1>;
+
+my @st1cnt = grep /$string1/,@data;
+
+my @st2cnt = grep /$string2/,@data;
+
+my @st3cnt = grep /$string3/,@data;
+
+my $rngcnt = scalar(@st1cnt);
+
+my $bkgcnt = scalar(@st2cnt);
+
+my $bkdcnt = scalar(@st3cnt);
+
+my %arrText = undef;
+
+
+close (FH1);
+
+#system ("rm -f $source");
+
+system ("chown -R nagios:nagios $source");
