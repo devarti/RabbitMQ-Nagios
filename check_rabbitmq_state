@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-#$Ida get_rabbitmq_state,v 1.0 2013/09/11 13:04:21 dpatha200 Exp dpatha200 $
+#$Ida get_rabbitmq_state,v 1.0 2013/09/11 13:04:21 DPathak Exp Dpathak $
 #
 ####  check_rabbitmq_state this script can be run as Nagios user which relies on the data 
 ####  Taken by get_rabbitmq_stat file which will be run by hostmon.
